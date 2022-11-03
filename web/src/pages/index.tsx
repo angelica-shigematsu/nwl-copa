@@ -1,15 +1,18 @@
 //JSX - JavaScript + XML (HTML)
 // TSX - TYpeScript + JSX
-// interface HomeProps {
-//   count: number
-// }
+interface HomeProps {
+  count: number
+  guessCount: number
+  userCount: number
+}
 import Image from 'next/image'
 import logoImg from '../assets/logo.svg'
 import appPreviewImg from '../assets/app-nlw-copa-preview.png'
 import usersAvatarExampleImg from '../assets/users-avatar-example.png'
 import iconCheckImg from '../assets/icon-check.svg'
+import { api } from '../lib/axios'
 
-export default function Home() {
+export default function Home(props: HomeProps) {
   return (
     <div className="max-w-[1124px] h-screen mx-auto grid grid-cols-2 gap-28 items-center">
       <main>
@@ -20,7 +23,7 @@ export default function Home() {
         <div className="-10 flex items-center gap-2">
           <Image src={usersAvatarExampleImg} alt="Avatar"/>
         
-          <strong className="text-gray-100 text-xl"><span className="text-ignite-500">12.592 </span>pessoas já estão usando</strong>
+          <strong className="text-gray-100 text-xl"><span className="text-ignite-500">+{props.userCount} </span>pessoas já estão usando</strong>
         </div>
 
         <form className="mt-10 flex gap-2">
@@ -41,26 +44,25 @@ export default function Home() {
           Após criar seu boão, você recebrá um código único que poderá usar para convidar outras pessoas
         </p>
       
-        <div className="m-10 pt-10 border-t border-gray-600">
-          <div>
+        <div className="m-10 pt-10 border-t border-gray-600 flex items-center justify-between text-gray-100">
+          <div className="flex items-center gap-6">
             <Image src={iconCheckImg} alt="Icone"></Image>
-            <div>
-              <span>+2.034</span>
+            <div className="flex flex-col ">
+            <span className="font-bold text-2xl">+{props.count}</span>
               <span>Bolões criados</span>
             </div>
           </div>
-        </div>
+        
+          <div className="w-px h-14 bg-gray-600"></div>
 
-        <div>
-          <div>
+          <div className="flex items-center gap-6">
             <Image src={iconCheckImg} alt="Icone"></Image>
-            <div>
-              <span>+192.847</span>
+            <div className="flex flex-col ">
+            <span className="font-bold text-2xl">+{props.guessCount}</span>
               <span>Palpites enviados</span>
             </div>
           </div>
         </div>
-
       </main>
       <Image src={appPreviewImg} alt="Dois celulares exibindo uma prévia da aplicação móvel do NWL Copa" 
       quality={100}/>
@@ -69,14 +71,24 @@ export default function Home() {
     )
 }
 
-// export const getServerSideProps = async () => {
-//   const response = await fetch('http://localhost:3333/pools/count')
-//   const data = await response.json()
+export const getServerSideProps = async () => {
+  //const poolCountResponse= await api.get('/pools/count')
+  //const data = await response.json()
 
-//   return {
-//     props : {
-//       count: data.pools,
-//     }
-//   }
-// }
+  const [poolCountResponse, guessesCountResponse, userCountResponse] = await Promise.all([
+    api.get('/pools/count'),
+    api.get('/guesses/count'),
+    api.get('users/count')
+  ])
+
+  //const guessesCountResponse = await api('/guesses/count')
+  //const data = await response.json()
+  return {
+    props : {
+      count: poolCountResponse.data.pools,
+      guessCount: guessesCountResponse.data.guess,
+      userCount: userCountResponse.data.user
+    }
+  }
+}
 

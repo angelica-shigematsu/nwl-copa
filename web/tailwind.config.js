@@ -8,6 +8,9 @@ module.exports = {
       fontFamily: {
         sans: 'Robot, sans-serif'
       },
+      backgroundImage: {
+        app: 'url(/BG-effects.png)'
+      },
       colors: {
         ignite: {
           500: '#129E57',
