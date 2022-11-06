@@ -12,7 +12,6 @@ import usersAvatarExampleImg from '../assets/users-avatar-example.png'
 import iconCheckImg from '../assets/icon-check.svg'
 import { api } from '../lib/axios'
 import { FormEvent, useState } from 'react'
-import { allowedNodeEnvironmentFlags } from 'process'
 
 export default function Home(props: HomeProps) {
 
@@ -35,7 +34,7 @@ export default function Home(props: HomeProps) {
       setPoolTitle('')
     } catch (err) {
       console.log(err)
-      alert('Falha ao criar o boão, tente novamente')
+      alert('Falha ao criar o bolão, tente novamente')
     }
   }
   return (
